@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Apparatus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     SITE CONFIG — edit suite items and links in config.js below
+     ============================================================ */
+
+  :root {
+    --bg: #0a0a0a;
+    --fg: #e8e4d9;
+    --fg-dim: #6b6760;
+    --fg-muted: #3a3834;
+    --accent: #c8b560;
+    --accent-dim: #7a6e3a;
+    --border: #222220;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    font-weight: 500; font-size: 13px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg); user-select: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 12px; letter-spacing: 0.08em; color: var(--fg-dim); transition: color 0.15s; }
+  .nav-links a:hover { color: var(--fg); text-decoration: none; }
+
+  /* LAYOUT */
+  main { max-width: 860px; margin: 0 auto; padding: 0 2.5rem; }
+
+  section { padding: 7rem 0 4rem; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  /* HERO */
+  #hero { padding-top: 9rem; padding-bottom: 5rem; }
+
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--accent);
+  }
+
+  h1.hero-title {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 300; line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin-bottom: 2.5rem;
+  }
+  h1.hero-title em { font-style: normal; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 14px; font-weight: 300; color: var(--fg-dim);
+    max-width: 520px; line-height: 1.9;
+    margin-bottom: 3rem;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+
+  .btn {
+    display: inline-block;
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.65rem 1.5rem;
+    border: 1px solid;
+    transition: all 0.15s;
+    cursor: pointer;
+    text-decoration: none !important;
+  }
+  .btn-primary {
+    background: var(--accent); color: var(--bg); border-color: var(--accent);
+  }
+  .btn-primary:hover { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+  .btn-ghost { border-color: var(--fg-muted); color: var(--fg-dim); }
+  .btn-ghost:hover { border-color: var(--fg-dim); color: var(--fg); }
+
+  .hero-meta {
+    margin-top: 4rem;
+    display: grid; grid-template-columns: repeat(3, auto); gap: 0;
+    border: 1px solid var(--border); max-width: 480px;
+  }
+  .hero-meta-item {
+    padding: 1.25rem 1.5rem; border-right: 1px solid var(--border);
+  }
+  .hero-meta-item:last-child { border-right: none; }
+  .meta-val {
+    display: block; font-size: 20px; font-weight: 500; color: var(--fg); line-height: 1;
+  }
+  .meta-label {
+    display: block; font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--fg-dim); margin-top: 4px;
+  }
+
+  /* SECTION LABELS */
+  .section-label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent-dim); margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ABOUT */
+  .manifesto-text {
+    font-size: 15px; font-weight: 300; line-height: 2;
+    color: var(--fg-dim); max-width: 640px;
+  }
+  .manifesto-text strong { color: var(--fg); font-weight: 500; }
+  .manifesto-text .hl { color: var(--accent); }
+
+  .principles { margin-top: 3rem; display: flex; flex-direction: column; gap: 0; }
+  .principle {
+    display: grid; grid-template-columns: 80px 1fr;
+    border-top: 1px solid var(--border); padding: 1.25rem 0; align-items: baseline;
+    gap: 2rem;
+  }
+  .principle:last-child { border-bottom: 1px solid var(--border); }
+  .p-num { font-size: 11px; color: var(--fg-dim); }
+  .p-text { font-size: 13px; color: var(--fg-dim); }
+  .p-text strong { color: var(--fg); display: block; margin-bottom: 0.25rem; }
+
+  /* SUITE */
+  #suite-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+
+  .suite-card {
+    background: var(--bg);
+    padding: 1.75rem;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .suite-card:hover { background: #111110; }
+
+  .card-status {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 6px;
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  .status-dot.wip { background: var(--fg-dim); }
+  .status-dot.planned { background: var(--fg-muted); }
+  .status-active { color: var(--accent); }
+  .status-wip { color: var(--fg-dim); }
+  .status-planned { color: var(--fg-muted); }
+
+  .card-name {
+    font-size: 16px; font-weight: 500; color: var(--fg);
+    margin-bottom: 0.4rem; letter-spacing: -0.01em;
+  }
+  .card-tagline {
+    font-size: 12px; color: var(--fg-dim); line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+  .card-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .card-link {
+    font-size: 11px; letter-spacing: 0.05em; color: var(--fg-dim);
+    transition: color 0.15s;
+  }
+  .card-link:hover { color: var(--accent); text-decoration: none; }
+  .card-link::before { content: '↗ '; }
+
+  .suite-add {
+    background: var(--bg); padding: 1.75rem;
+    border: 2px dashed var(--fg-muted);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    color: var(--fg-muted); font-size: 12px; letter-spacing: 0.05em;
+    min-height: 160px;
+    text-align: center;
+  }
+  .suite-add:hover { border-color: var(--accent-dim); color: var(--accent-dim); background: #0e0e0d; }
+
+  /* DOWNLOADS */
+  #dl-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+  .dl-row {
+    background: var(--bg);
+    display: grid; grid-template-columns: 1fr auto auto;
+    align-items: center;
+    padding: 1.25rem 1.75rem;
+    gap: 2rem;
+    transition: background 0.15s;
+  }
+  .dl-row:hover { background: #111110; }
+  .dl-name { font-weight: 500; font-size: 14px; color: var(--fg); }
+  .dl-desc { font-size: 12px; color: var(--fg-dim); margin-top: 2px; }
+  .dl-version { font-size: 11px; color: var(--fg-dim); white-space: nowrap; }
+  .dl-gh {
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--accent-dim);
+    padding: 0.35rem 0.85rem; white-space: nowrap; transition: all 0.15s;
+  }
+  .dl-gh:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+
+  /* CONTRIBUTE */
+  .contrib-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+  .contrib-cell {
+    background: var(--bg); padding: 2rem 1.75rem;
+  }
+  .contrib-cell h3 {
+    font-size: 13px; font-weight: 500; color: var(--fg);
+    margin-bottom: 0.75rem; letter-spacing: 0.02em;
+  }
+  .contrib-cell p { font-size: 12px; color: var(--fg-dim); line-height: 1.8; }
+  .contrib-cell a { color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+    max-width: 860px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: end; gap: 2rem;
+  }
+  .footer-mark { font-size: 11px; color: var(--fg-dim); line-height: 2; }
+  .footer-mark strong { color: var(--fg); font-size: 13px; display: block; margin-bottom: 4px; }
+  .footer-links { display: flex; flex-direction: column; gap: 6px; text-align: right; }
+  .footer-links a { font-size: 11px; color: var(--fg-dim); }
+  .footer-links a:hover { color: var(--accent); text-decoration: none; }
+
+  /* CURSOR BLINK */
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .cursor {
+    display: inline-block; width: 10px; height: 1em;
+    background: var(--accent); margin-left: 4px; vertical-align: -2px;
+    animation: blink 1.1s step-end infinite;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--fg-muted); }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { gap: 1.25rem; }
+    main { padding: 0 1.25rem; }
+    h1.hero-title { font-size: 2rem; }
+    .hero-meta { grid-template-columns: 1fr 1fr; }
+    .hero-meta-item:nth-child(2) { border-right: none; }
+    .hero-meta-item:nth-child(3) { grid-column: 1/-1; border-top: 1px solid var(--border); }
+    .dl-row { grid-template-columns: 1fr auto; }
+    .dl-version { display: none; }
+    .contrib-grid { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr; }
+    .footer-links { text-align: left; }
+    .principle { grid-template-columns: 1fr; gap: 0.25rem; }
+    .p-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav>
+  <div class="nav-logo">Human <span>Apparatus</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#suite">Suite</a></li>
+    <li><a href="#downloads">Downloads</a></li>
+    <li><a href="#contribute">Contribute</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section id="hero">
+    <div class="hero-eyebrow">Non-profit · Under Registration</div>
+    <h1 class="hero-title">
+      Software for<br>
+      <em>humans</em><br>
+      first.<span class="cursor"></span>
+    </h1>
+    <p class="hero-sub">
+      Human Apparatus builds TUI-first, text-native, open source tools.
+      No surveillance. No lock-in. No dark patterns.
+      Just software that respects how people actually think.
+    </p>
+    <div class="hero-actions">
+      <a href="#suite" class="btn btn-primary">Explore Suite</a>
+      <a href="#downloads" class="btn btn-ghost">Downloads</a>
+    </div>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="meta-val" id="meta-projects">1</span>
+        <span class="meta-label">Projects</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="meta-val">Free</span>
+        <span class="meta-label">Always</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="meta-val">OSS</span>
+        <span class="meta-label">Open Source</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section id="about">
+    <div class="section-label">01 / About</div>
+    <p class="manifesto-text">
+      We believe in <strong>software that serves its user</strong>, not the other way around.
+      As interfaces grow noisier and more extractive, there is a quiet case for
+      text-native tools — fast, composable, scriptable, and
+      <span class="hl">built in the open</span>.
+      <br><br>
+      Human Apparatus is a registered non-profit developing a suite of TUI-first
+      applications under a single coherent philosophy: the terminal is not a step
+      backward — it is the most honest interface ever made.
+    </p>
+
+    <div class="principles">
+      <div class="principle">
+        <span class="p-num">01.</span>
+        <div class="p-text"><strong>TUI First</strong>
+          Every product works completely in a terminal before a GUI is ever considered.</div>
+      </div>
+      <div class="principle">
+        <span class="p-num">02.</span>
+        <div class="p-text"><strong>Text Native</strong>
+          Data lives in plain text. Configs are readable. Nothing is locked in a binary blob.</div>
+      </div>
+      <div class="principle">
+        <span class="p-num">03.</span>
+        <div class="p-text"><strong>Composable</strong>
+          Tools pipe into each other. No monoliths. Unix philosophy, applied consistently.</div>
+      </div>
+      <div class="principle">
+        <span class="p-num">04.</span>
+        <div class="p-text"><strong>Permanently Open Source</strong>
+          All code is free software. No open-core, no cloud-only features, no bait-and-switch.</div>
+      </div>
+      <div class="principle">
+        <span class="p-num">05.</span>
+        <div class="p-text"><strong>Human, not AI-first</strong>
+          Not anti-AI — simply clear that tools exist to augment humans, not replace them.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SUITE
+       Edit SUITE_CONFIG below to add/update products.
+       ============================================================ -->
+  <section id="suite">
+    <div class="section-label">02 / Suite</div>
+    <div id="suite-grid"></div>
+  </section>
+
+  <!-- ============================================================
+       DOWNLOADS
+       Edit DOWNLOADS_CONFIG below.
+       ============================================================ -->
+  <section id="downloads">
+    <div class="section-label">03 / Downloads</div>
+    <div id="dl-list"></div>
+
+    <p style="margin-top:1.5rem; font-size:12px; color:var(--fg-dim);">
+      All releases are signed and verified.
+      Source is always available on <a href="https://github.com/human-apparatus" target="_blank">GitHub</a>.
+      <!-- UPDATE the GitHub org URL above -->
+    </p>
+  </section>
+
+  <!-- ============================================================
+       CONTRIBUTE
+       ============================================================ -->
+  <section id="contribute">
+    <div class="section-label">04 / Contribute</div>
+    <div class="contrib-grid">
+      <div class="contrib-cell">
+        <h3>Code</h3>
+        <p>
+          Fork any repo, open a PR, write a test. We use conventional commits
+          and keep changelogs honest. All PRs are reviewed by a human.
+          Start at <a href="https://github.com/human-apparatus" target="_blank">github.com/human-apparatus</a>.
+          <!-- UPDATE GitHub org link -->
+        </p>
+      </div>
+      <div class="contrib-cell">
+        <h3>Documentation</h3>
+        <p>
+          Docs live alongside code in each repo. If something is unclear,
+          fix it in a PR. Plain Markdown, no fancy toolchains required.
+        </p>
+      </div>
+      <div class="contrib-cell">
+        <h3>Donate</h3>
+        <p>
+          We're a non-profit under registration. Donations will be accepted
+          once formalized. Watch this page for updates.
+          <!-- UPDATE with donation link when available -->
+        </p>
+      </div>
+      <div class="contrib-cell">
+        <h3>Spread the Word</h3>
+        <p>
+          Star repos. Write a blog post. Mention us in a talk.
+          The most effective marketing for free software is people
+          who genuinely use it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="footer-mark">
+    <strong>Human Apparatus</strong>
+    A non-profit software foundation. Under registration.<br>
+    All software released under free and open source licenses.<br>
+    <span style="color:var(--fg-muted);">© 2025 Human Apparatus — </span>
+    <!-- UPDATE year / jurisdiction as needed -->
+    <a href="https://github.com/human-apparatus" target="_blank">GitHub</a>
+  </div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#suite">Suite</a>
+    <a href="#downloads">Downloads</a>
+    <a href="#contribute">Contribute</a>
+    <!-- UPDATE: add contact/email link below if needed -->
+    <!-- <a href="mailto:hello@humanapparatus.org">Contact</a> -->
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     ✏️  CONFIGURATION — EDIT HERE
+     ============================================================
+
+  SUITE_CONFIG  →  your product cards
+  DOWNLOADS_CONFIG  →  the download table rows
+
+  Status values: "active" | "wip" | "planned"
+
+  For GitHub links, use full URLs like:
+    https://github.com/human-apparatus/nysas
+    https://github.com/human-apparatus/nysas/releases/latest
+
+  ============================================================ -->
+<script>
+const SUITE_CONFIG = [
+  {
+    name: "Nysas",
+    tagline: "A TUI-first text productivity suite. Plain files, no cloud, no noise.",
+    status: "active",           // "active" | "wip" | "planned"
+    links: [
+      { label: "GitHub",   href: "https://github.com/human-apparatus/nysas" },
+      { label: "Docs",     href: "https://github.com/human-apparatus/nysas/wiki" },
+      // { label: "Website", href: "https://nysas.humanapparatus.org" },
+    ]
+  },
+
+  // ---- ADD MORE PRODUCTS BELOW ----
+  // {
+  //   name: "Krate",
+  //   tagline: "Fast local-first note store with fuzzy search.",
+  //   status: "wip",
+  //   links: [
+  //     { label: "GitHub", href: "https://github.com/human-apparatus/krate" },
+  //   ]
+  // },
+
+  // {
+  //   name: "Parch",
+  //   tagline: "Minimal patch-based task tracker that lives in a text file.",
+  //   status: "planned",
+  //   links: []
+  // },
+];
+
+const DOWNLOADS_CONFIG = [
+  {
+    name: "Nysas",
+    desc: "TUI text suite · Linux / macOS / Windows",
+    version: "v0.1.0",   // update per release
+    githubRelease: "https://github.com/human-apparatus/nysas/releases/latest",
+  },
+
+  // ---- ADD MORE DOWNLOAD ROWS BELOW ----
+  // {
+  //   name: "Krate",
+  //   desc: "Note store · Linux / macOS",
+  //   version: "pre-release",
+  //   githubRelease: "https://github.com/human-apparatus/krate/releases",
+  // },
+];
+
+/* ---- RENDER ---- */
+(function () {
+  const grid = document.getElementById("suite-grid");
+  const statusMeta = {
+    active:  { dot: "", label: "Active",    cls: "status-active" },
+    wip:     { dot: "wip", label: "In progress", cls: "status-wip" },
+    planned: { dot: "planned", label: "Planned",  cls: "status-planned" },
+  };
+
+  SUITE_CONFIG.forEach(p => {
+    const s = statusMeta[p.status] || statusMeta.planned;
+    const linksHTML = p.links.map(l =>
+      `<a class="card-link" href="${l.href}" target="_blank">${l.label}</a>`
+    ).join("");
+
+    const card = document.createElement("div");
+    card.className = "suite-card";
+    card.innerHTML = `
+      <div class="card-status">
+        <span class="status-dot ${s.dot}"></span>
+        <span class="${s.cls}">${s.label}</span>
+      </div>
+      <div class="card-name">${p.name}</div>
+      <div class="card-tagline">${p.tagline}</div>
+      <div class="card-links">${linksHTML}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  const addCard = document.createElement("div");
+  addCard.className = "suite-add";
+  addCard.innerHTML = `+ Add a project<br><span style="font-size:10px;margin-top:4px;display:block;opacity:.6;">Edit SUITE_CONFIG in the HTML</span>`;
+  grid.appendChild(addCard);
+
+  document.getElementById("meta-projects").textContent =
+    SUITE_CONFIG.filter(p => p.status === "active").length || SUITE_CONFIG.length;
+
+  const dlList = document.getElementById("dl-list");
+  DOWNLOADS_CONFIG.forEach(d => {
+    const row = document.createElement("div");
+    row.className = "dl-row";
+    row.innerHTML = `
+      <div>
+        <div class="dl-name">${d.name}</div>
+        <div class="dl-desc">${d.desc}</div>
+      </div>
+      <div class="dl-version">${d.version}</div>
+      <a class="dl-gh" href="${d.githubRelease}" target="_blank">↓ GitHub</a>
+    `;
+    dlList.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>
